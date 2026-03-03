@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CloudShelf Dashboard</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+
+<body>
+
+    <h2>Welcome to CloudShelf Dashboard</h2>
+
+    <% if(user){ %>
+        <h3>Hello, <%= user.email %></h3>
+    <% } else { %>
+        <h3>User not logged in</h3>
+    <% } %>
+
+    <a href="/logout">Logout</a>
+
+</body>
+</html>

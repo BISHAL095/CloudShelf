@@ -5,18 +5,25 @@ const path = require("path");
 const sessionConfig = require("./src/config/session");
 const passport = require("passport");
 
+const homeRoute = require("./src/routes/homeRoute");
 const authRoute = require("./src/routes/authRoute");
+const dashboardRoute = require("./src/routes/dashboardRoute");
 const fileRoute = require("./src/routes/fileRoute");
 const folderRoute = require("./src/routes/folderRoute");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-
-/* ---------- App Config ---------- */
+/* ---------- View Engine ---------- */
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
+
+/* ---------- Static Files ---------- */
+
+app.use(express.static(path.join(__dirname, "public")));
+
+/* ---------- Body Parser ---------- */
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -24,25 +31,26 @@ app.use(express.urlencoded({ extended: false }));
 /* ---------- Session + Passport ---------- */
 
 app.use(sessionConfig);
-require("./config/passport")(passport);
+
+require("./src/config/passport")(passport);
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-/* ---------- Global View User ---------- */
+/* ---------- Global User ---------- */
 
 app.use((req, res, next) => {
   res.locals.user = req.user || null;
   next();
 });
 
-app.use(express.static("public"));
-
 /* ---------- Routes ---------- */
 
+app.use("/",homeRoute);
 app.use("/", authRoute);
-app.use("/", fileRoute);
-app.use("/", folderRoute);
+app.use("/",dashboardRoute);
+// app.use("/", fileRoute);
+// app.use("/", folderRoute);
 
 /* ---------- Server ---------- */
 
