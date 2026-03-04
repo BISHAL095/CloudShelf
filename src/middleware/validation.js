@@ -1,4 +1,3 @@
-// src/middlewares/validation.js
 
 exports.validateRegister = (req, res, next) => {
   const { email, password } = req.body;

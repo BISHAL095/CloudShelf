@@ -49,7 +49,7 @@ app.use((req, res, next) => {
 app.use("/",homeRoute);
 app.use("/", authRoute);
 app.use("/",dashboardRoute);
-// app.use("/", fileRoute);
+app.use("/files", fileRoute);
 // app.use("/", folderRoute);
 
 /* ---------- Server ---------- */

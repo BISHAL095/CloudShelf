@@ -9,7 +9,7 @@ module.exports = function (passport) {
       { usernameField: "email" },
       async (email, password, done) => {
         try {
-
+          
           if (!email || !password) {
             return done(null, false, { message: "Email and password required" });
           }
@@ -42,13 +42,11 @@ module.exports = function (passport) {
 
   passport.deserializeUser(async (id, done) => {
     try {
-
       const user = await getUserById(id);
 
       if (!user) {
         return done(null, false);
       }
-
       done(null, user);
 
     } catch (err) {
