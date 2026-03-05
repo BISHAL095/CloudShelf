@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Folder</title>
+</head>
+<body>
+    <%- include("../sections/navbar") %>
+
+    <h1>Create New Folder</h1>
+
+    <form action="/folders" method="POST">
+
+        <input 
+            type="text" 
+            name="name" 
+            placeholder="Folder name"
+            required
+        >
+
+        <button type="submit">Create Folder</button>
+
+    </form>
+
+    <br>
+
+    <a href="/folders">Back</a>
+
+    <%- include("../sections/footer") %>
+
+</body>
+</html>

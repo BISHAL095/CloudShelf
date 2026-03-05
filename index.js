@@ -50,7 +50,7 @@ app.use("/",homeRoute);
 app.use("/", authRoute);
 app.use("/",dashboardRoute);
 app.use("/files", fileRoute);
-// app.use("/", folderRoute);
+app.use("/folders", folderRoute);
 
 /* ---------- Server ---------- */
 

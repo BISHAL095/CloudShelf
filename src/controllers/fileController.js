@@ -9,7 +9,7 @@ async function getUserFiles(req, res, next) {
 
     const files = await fileService.getFilesByUserId(userId);
 
-    res.render("files/index", {
+    res.render("file/index", {
       user: req.user,
       files
     });
