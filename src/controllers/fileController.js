@@ -1,4 +1,5 @@
 const fileService = require("../services/fileService");
+const path = require("path");
 
 /*
 Get files of logged-in user
@@ -9,7 +10,7 @@ async function getUserFiles(req, res, next) {
 
     const files = await fileService.getFilesByUserId(userId);
 
-    res.render("file/index", {
+    res.render("dashboard", {
       user: req.user,
       files
     });
@@ -30,15 +31,25 @@ async function uploadFile(req, res, next) {
       return res.status(400).send("File not uploaded");
     }
 
+    const customName = req.body.customName;
+
+    const extension = path.extname(req.file.originalname);
+
+    const baseName = customName && customName.trim() !== ""
+      ? customName.trim()
+      : path.parse(req.file.originalname).name;
+
+    const finalName = baseName + extension;
+
     await fileService.createFile({
       userId,
-      name: req.file.originalname,
+      name: finalName,
       size: req.file.size,
       url: "/uploads/" + req.file.filename,
       folderId: null
     });
 
-    res.redirect("/files");
+    res.redirect("/dashboard");
 
   } catch (error) {
     next(error);
@@ -50,8 +61,8 @@ Upload file inside folder
 */
 async function uploadFileToFolder(req, res, next) {
   try {
-    const userId = req.user.id;
 
+    const userId = req.user.id;
     const folderId = Number(req.params.folderId);
 
     if (!req.file) {
@@ -64,15 +75,25 @@ async function uploadFileToFolder(req, res, next) {
       return res.status(403).send("Unauthorized folder access");
     }
 
+    const customName = req.body.customName;
+
+    const extension = path.extname(req.file.originalname);
+
+    const baseName = customName && customName.trim() !== ""
+      ? customName.trim()
+      : path.parse(req.file.originalname).name;
+
+    const finalName = baseName + extension;
+
     await fileService.createFile({
       userId,
-      name: req.file.originalname,
+      name: finalName,
       size: req.file.size,
       url: "/uploads/" + req.file.filename,
       folderId
     });
 
-    res.redirect("/files");
+    res.redirect(`/folders/${folderId}`);
 
   } catch (error) {
     next(error);
@@ -96,7 +117,11 @@ async function deleteFile(req, res, next) {
 
     await fileService.deleteFile(fileId);
 
-    res.redirect("/files");
+    if (file.folderId) {
+        res.redirect(`/folders/${file.folderId}`);
+    } else {
+        res.redirect("/dashboard");
+    }
 
   } catch (error) {
     next(error);
@@ -124,9 +149,12 @@ async function renameFile(req, res, next) {
       return res.status(403).send("Unauthorized");
     }
 
-    await fileService.renameFile(fileId, name.trim());
+    const extension = path.extname(file.name);
+    const finalName = name.trim() + extension;
 
-    res.redirect("/files");
+    await fileService.renameFile(fileId, finalName);
+
+    res.redirect("/dashboard");
 
   } catch (error) {
     next(error);

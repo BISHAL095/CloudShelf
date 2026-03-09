@@ -10,6 +10,8 @@ const authRoute = require("./src/routes/authRoute");
 const dashboardRoute = require("./src/routes/dashboardRoute");
 const fileRoute = require("./src/routes/fileRoute");
 const folderRoute = require("./src/routes/folderRoute");
+const methodOverride = require("method-override");
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -28,6 +30,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.use(methodOverride("_method"));
 /* ---------- Session + Passport ---------- */
 
 app.use(sessionConfig);

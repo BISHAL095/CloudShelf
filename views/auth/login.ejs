@@ -2,58 +2,68 @@
 <html>
 <head>
   <title>Login | CloudShelf</title>
-  <link rel="stylesheet" href="/css/auth.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-  
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen flex flex-col">
+
   <%- include("../sections/navbar") %>
 
-  <div class="container">
-    <h2>Login</h2>
+  <div class="flex flex-1 items-center justify-center px-4 py-10">
 
-    <% if (typeof error !== "undefined" && error) { %>
-      <p class="error"><%= error %></p>
-    <% } %>
+    <div class="bg-white/90 backdrop-blur-md shadow-xl border border-gray-100 rounded-2xl w-full max-w-md p-10 transition-all duration-300">
 
-    <form action="/login" method="POST">
-      <input type="email" name="email" placeholder="Email" required />
+      <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center tracking-tight">
+        Login to <span class="text-blue-600">CloudShelf</span>
+      </h2>
 
-      <input type="password" name="password" placeholder="Password" required />
+      <% if (typeof error !== "undefined" && error) { %>
+        <p class="bg-red-50 text-red-600 border border-red-200 rounded-lg px-4 py-2 mb-5 text-sm text-center">
+          <%= error %>
+        </p>
+      <% } %>
 
-      <button type="submit">Login</button>
-    </form>
+      <form id="loginForm" action="/login" method="POST" class="space-y-5">
 
-    <p>
-      <a href="/register">Don't have an account? Register</a>
-    </p>
+        <input 
+          type="email" 
+          name="email" 
+          placeholder="Email"
+          required
+          class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+        />
+
+        <input 
+          type="password" 
+          name="password" 
+          placeholder="Password"
+          required
+          class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+        />
+
+        <button 
+          type="submit"
+          class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-semibold py-3 rounded-lg transition duration-200 shadow-sm hover:shadow-md"
+        >
+          Login
+        </button>
+
+      </form>
+
+      <p class="text-sm text-gray-600 mt-7 text-center">
+        <a href="/register" class="text-blue-600 font-medium hover:text-blue-700 hover:underline transition">
+          Don't have an account? Register
+        </a>
+      </p>
+
+    </div>
+
   </div>
 
-    <%- include("../sections/footer") %>
+  <%- include("../sections/footer") %>
+
+  <script src="/js/login.js"></script>
 
 </body>
 </html>
-
-<script>
-document.querySelector("form").addEventListener("submit", async function(e){
-    e.preventDefault(); 
-
-    const email = document.querySelector("input[name='email']").value;
-    const password = document.querySelector("input[name='password']").value;
-
-    const res = await fetch("/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email, password })
-    });
-
-    if(res.redirected){
-        window.location.href = res.url;
-    } else {
-        const text = await res.text();
-        document.body.innerHTML = text;
-    }
-});
-</script>

@@ -1,40 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Your Folders</title>
+<title>Your Folders | CloudShelf</title>
+<link rel="stylesheet" href="/css/style.css">
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <%- include("../sections/navbar") %>
 
-    <h1>Your Folders</h1>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen text-gray-800">
 
-    <a href="/folders/new">Create New Folder</a>
+<%- include("../sections/navbar") %>
 
-    <hr>
+<div class="max-w-5xl mx-auto p-6">
 
-    <% if (!folders || folders.length === 0) { %>
-        <p>No folders created yet.</p>
-    <% } %>
+<h1 class="text-3xl font-bold mb-6">📁 Your Folders</h1>
 
-    <% folders.forEach(folder => { %>
-        <div>
+<a href="/folders/new" class="inline-block mb-5">
+<button class="bg-green-500 text-white px-5 py-2 rounded-lg hover:bg-green-600 transition shadow-sm hover:shadow-md">
+Create Folder
+</button>
+</a>
 
-            <strong><%= folder.name %></strong>
+<% if (!folders || folders.length === 0) { %>
+<p class="text-gray-600 mb-6">No folders created yet.</p>
+<% } %>
 
-            <br>
+<% folders.forEach(folder => { %>
 
-            <a href="/folders/<%= folder.id %>">Open</a>
-            <a href="/folders/<%= folder.id %>/edit">Edit</a>
+<div class="flex items-center justify-between bg-white border border-gray-100 p-4 rounded-xl shadow-sm hover:shadow-md transition mb-3">
 
-            <form action="/folders/<%= folder.id %>?_method=DELETE" method="POST">
-                <button type="submit">Delete</button>
-            </form>
+<span class="text-gray-700">
+📁 <strong><%= folder.name %></strong>
+</span>
 
-        </div>
-        <hr>
-    <% }) %>
+<div class="flex items-center space-x-4">
 
-    <%- include("../sections/footer") %>
+<a href="/folders/<%= folder.id %>" class="text-blue-600 font-medium hover:underline">
+Open
+</a>
+
+<a href="/folders/<%= folder.id %>/edit" class="text-yellow-500 hover:underline">
+Edit
+</a>
+
+<form action="/folders/<%= folder.id %>?_method=DELETE" method="POST">
+<button type="submit" class="text-red-500 hover:text-red-700">
+Delete
+</button>
+</form>
+
+</div>
+
+</div>
+
+<% }) %>
+
+</div>
+
+<%- include("../sections/footer") %>
 
 </body>
 </html>

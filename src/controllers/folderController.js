@@ -24,9 +24,14 @@ exports.createFolder = async (req, res) => {
 
 
 exports.showFolder = async (req, res) => {
+
   const id = parseInt(req.params.id);
 
-  const folder = await folderService.getFolderById(id);
+  const folder = await folderService.getFolderById(id, req.user.id);
+
+  if (!folder) {
+    return res.status(404).send("Folder not found");
+  }
 
   res.render("folder/show", {
     folder,
@@ -37,7 +42,11 @@ exports.showFolder = async (req, res) => {
 
 exports.editFolder = async (req, res) => {
 
-  const folder = await folderService.getFolderById(req.params.id);
+  const folder = await folderService.getFolderById(req.params.id, req.user.id);
+
+  if (!folder) {
+    return res.status(404).send("Folder not found");
+  }
 
   res.render("folder/edit", { folder });
 };
@@ -47,7 +56,7 @@ exports.updateFolder = async (req, res) => {
 
   const { name } = req.body;
 
-  await folderService.updateFolder(req.params.id, name);
+  await folderService.updateFolder(req.params.id, name, req.user.id);
 
   res.redirect("/dashboard");
 };
@@ -55,7 +64,7 @@ exports.updateFolder = async (req, res) => {
 
 exports.deleteFolder = async (req, res) => {
 
-  await folderService.deleteFolder(req.params.id);
+  await folderService.deleteFolder(req.params.id, req.user.id);
 
   res.redirect("/dashboard");
 };

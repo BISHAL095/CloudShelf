@@ -1,5 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const path = require("path");
+
 
 /* Get all files for a user (latest first) */
 async function getFilesByUserId(userId) {
@@ -37,10 +39,19 @@ async function deleteFile(fileId) {
 }
 
 /* Rename file */
+
 async function renameFile(fileId, newName) {
+  const file = await prisma.file.findUnique({
+    where: { id: fileId }
+  });
+
+  const extension = path.extname(file.name); // .png, .jpg, etc
+
   return prisma.file.update({
     where: { id: fileId },
-    data: { name: newName }
+    data: {
+      name: newName + extension
+    }
   });
 }
 

@@ -1,20 +1,29 @@
 const express = require("express");
 const router = express.Router();
+const authMiddleware = require("../middleware/authMiddleware");
+
 
 const folderController = require("../controllers/folderController");
 
-router.get("/", folderController.index);
+// Get all folders
+router.get("/",authMiddleware, folderController.index);
 
-router.get("/new", folderController.newFolder);
+// Show create form
+router.get("/new",authMiddleware, folderController.newFolder);
 
-router.post("/", folderController.createFolder);
+// Create folder
+router.post("/",authMiddleware, folderController.createFolder);
 
-router.get("/:id", folderController.showFolder);
+// View folder
+router.get("/:id",authMiddleware, folderController.showFolder);
 
-router.get("/:id/edit", folderController.editFolder);
+// Edit form
+router.get("/:id/edit",authMiddleware, folderController.editFolder);
 
-router.post("/:id/update", folderController.updateFolder);
+// Update folder
+router.put("/:id",authMiddleware, folderController.updateFolder);
 
-router.post("/:id/delete", folderController.deleteFolder);
+// Delete folder
+router.delete("/:id", authMiddleware, folderController.deleteFolder);
 
 module.exports = router;
