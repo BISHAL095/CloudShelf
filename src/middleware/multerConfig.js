@@ -1,26 +1,18 @@
-// src/middlewares/multerConfig.js
-
 const multer = require("multer");
-const path = require("path");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../config/cloudinary"); // your cloudinary instance
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    const uniqueName =
-      Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueName + path.extname(file.originalname));
-  },
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: async (req, file) => ({
+    folder: req.body.folderId ? `CloudShelf/${req.body.folderId}` : "CloudShelf/root",
+    public_id: `${Date.now()}-${Math.round(Math.random() * 1e9)}`, // unique file name
+    resource_type: "auto", // supports images, pdfs, docs, etc.
+  }),
 });
 
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = [
-    "image/png",
-    "image/jpeg",
-    "application/pdf",
-  ];
-
+  const allowedTypes = ["image/png", "image/jpeg", "application/pdf"];
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {

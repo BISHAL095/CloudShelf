@@ -1,5 +1,6 @@
 const fileService = require("../services/fileService");
 const path = require("path");
+const cloudinary = require("../config/cloudinary");
 
 /*
 Get files of logged-in user
@@ -21,31 +22,29 @@ async function getUserFiles(req, res, next) {
 }
 
 /*
-Upload file to root folder
+Upload file to root folder (Cloudinary)
 */
 async function uploadFile(req, res, next) {
   try {
     const userId = req.user.id;
 
     if (!req.file) {
-      return res.status(400).send("File not uploaded");
+      return res.status(400).send("No file uploaded");
     }
 
     const customName = req.body.customName;
-
     const extension = path.extname(req.file.originalname);
-
     const baseName = customName && customName.trim() !== ""
       ? customName.trim()
       : path.parse(req.file.originalname).name;
-
     const finalName = baseName + extension;
 
+    // Save file info from Cloudinary
     await fileService.createFile({
       userId,
       name: finalName,
       size: req.file.size,
-      url: "/uploads/" + req.file.filename,
+      url: req.file.path, // Cloudinary URL
       folderId: null
     });
 
@@ -57,11 +56,10 @@ async function uploadFile(req, res, next) {
 }
 
 /*
-Upload file inside folder
+Upload file inside folder (Cloudinary)
 */
 async function uploadFileToFolder(req, res, next) {
   try {
-
     const userId = req.user.id;
     const folderId = Number(req.params.folderId);
 
@@ -76,20 +74,17 @@ async function uploadFileToFolder(req, res, next) {
     }
 
     const customName = req.body.customName;
-
     const extension = path.extname(req.file.originalname);
-
     const baseName = customName && customName.trim() !== ""
       ? customName.trim()
       : path.parse(req.file.originalname).name;
-
     const finalName = baseName + extension;
 
     await fileService.createFile({
       userId,
       name: finalName,
       size: req.file.size,
-      url: "/uploads/" + req.file.filename,
+      url: req.file.path, // Cloudinary URL
       folderId
     });
 
@@ -105,7 +100,6 @@ Delete file
 */
 async function deleteFile(req, res, next) {
   try {
-
     const userId = req.user.id;
     const fileId = Number(req.params.id);
 
@@ -113,6 +107,13 @@ async function deleteFile(req, res, next) {
 
     if (!file || file.userId !== userId) {
       return res.status(403).send("Unauthorized");
+    }
+
+    // Optional: delete from Cloudinary as well
+    if (file.url && file.url.includes("res.cloudinary.com")) {
+      const urlParts = file.url.split("/");
+      const publicIdWithFolder = urlParts.slice(-2).join("/").split(".")[0];
+      await cloudinary.uploader.destroy(publicIdWithFolder);
     }
 
     await fileService.deleteFile(fileId);
@@ -133,7 +134,6 @@ Rename file
 */
 async function renameFile(req, res, next) {
   try {
-
     const userId = req.user.id;
     const fileId = Number(req.params.id);
 

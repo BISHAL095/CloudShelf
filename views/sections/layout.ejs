@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title || "My App" %></title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <%- include('navbar') %>
+
+  <!-- Reusable Loading Overlay -->
+  <div id="globalLoadingOverlay" style="display:none;">
+      <div class="spinner"></div>
+      <p id="loadingText">Processing...</p>
+  </div>
+
+  <!-- Page Content -->
+  <main>
+    <%- body %>
+  </main>
+
+  <!-- Footer -->
+  <%- include('footer') %>
+
+  <script src="/js/loading.js"></script>
+  <script>
+    // Example: attach loading to all forms with class 'loadingForm'
+    document.querySelectorAll('.loadingForm').forEach(form => {
+        form.addEventListener('submit', () => showLoading('Processing...'));
+    });
+
+    // Example: attach loading to buttons with class 'loadingBtn'
+    document.querySelectorAll('.loadingBtn').forEach(btn => {
+        btn.addEventListener('click', () => showLoading('Processing...'));
+    });
+  </script>
+
+</body>
+</html>

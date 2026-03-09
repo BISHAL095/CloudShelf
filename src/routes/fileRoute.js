@@ -8,10 +8,10 @@ const upload = require("../middleware/multerConfig");
 // Get all files of logged-in user
 router.get("/", authMiddleware, fileController.getUserFiles);
 
-// Upload file (root)
+// Upload file to root
 router.post("/", authMiddleware, upload.single("file"), fileController.uploadFile);
 
-// Upload file into specific folder
+// Upload file into a specific folder
 router.post(
   "/folder/:folderId",
   authMiddleware,

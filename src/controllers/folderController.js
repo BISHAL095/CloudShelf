@@ -1,70 +1,115 @@
 const folderService = require("../services/folderService");
 
-exports.index = async (req, res) => {
+/*
+List all folders of the logged-in user
+*/
+exports.index = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const folders = await folderService.getUserFolders(userId);
 
-  const folders = await folderService.getUserFolders(req.user.id);
-
-  res.render("folder/index", { folders });
+    res.render("folder/index", { folders });
+  } catch (error) {
+    next(error);
+  }
 };
 
-
+/*
+Show form to create a new folder
+*/
 exports.newFolder = (req, res) => {
   res.render("folder/new");
 };
 
+/*
+Create a new folder
+*/
+exports.createFolder = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { name } = req.body;
 
-exports.createFolder = async (req, res) => {
+    if (!name || !name.trim()) {
+      return res.status(400).send("Folder name cannot be empty");
+    }
 
-  const { name } = req.body;
-
-  await folderService.createFolder(name, req.user.id);
-
-  res.redirect("/dashboard");
-};
-
-
-exports.showFolder = async (req, res) => {
-
-  const id = parseInt(req.params.id);
-
-  const folder = await folderService.getFolderById(id, req.user.id);
-
-  if (!folder) {
-    return res.status(404).send("Folder not found");
+    await folderService.createFolder(name.trim(), userId);
+    res.redirect("/dashboard");
+  } catch (error) {
+    next(error);
   }
-
-  res.render("folder/show", {
-    folder,
-    files: folder.files
-  });
 };
 
+/*
+Show a folder and its files
+*/
+exports.showFolder = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const folderId = parseInt(req.params.id);
 
-exports.editFolder = async (req, res) => {
+    const folder = await folderService.getFolderById(folderId, userId);
 
-  const folder = await folderService.getFolderById(req.params.id, req.user.id);
+    if (!folder) return res.status(404).send("Folder not found");
 
-  if (!folder) {
-    return res.status(404).send("Folder not found");
+    res.render("folder/show", {
+      folder,
+      files: folder.files || []
+    });
+  } catch (error) {
+    next(error);
   }
-
-  res.render("folder/edit", { folder });
 };
 
+/*
+Show edit folder form
+*/
+exports.editFolder = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const folderId = parseInt(req.params.id);
 
-exports.updateFolder = async (req, res) => {
+    const folder = await folderService.getFolderById(folderId, userId);
 
-  const { name } = req.body;
+    if (!folder) return res.status(404).send("Folder not found");
 
-  await folderService.updateFolder(req.params.id, name, req.user.id);
-
-  res.redirect("/dashboard");
+    res.render("folder/edit", { folder });
+  } catch (error) {
+    next(error);
+  }
 };
 
+/*
+Update folder name
+*/
+exports.updateFolder = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const folderId = parseInt(req.params.id);
+    const { name } = req.body;
 
-exports.deleteFolder = async (req, res) => {
+    if (!name || !name.trim()) {
+      return res.status(400).send("Folder name cannot be empty");
+    }
 
-  await folderService.deleteFolder(req.params.id, req.user.id);
+    await folderService.updateFolder(folderId, name.trim(), userId);
+    res.redirect("/dashboard");
+  } catch (error) {
+    next(error);
+  }
+};
 
-  res.redirect("/dashboard");
+/*
+Delete a folder
+*/
+exports.deleteFolder = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const folderId = parseInt(req.params.id);
+
+    await folderService.deleteFolder(folderId, userId);
+    res.redirect("/dashboard");
+  } catch (error) {
+    next(error);
+  }
 };
