@@ -3,13 +3,15 @@
 <head>
 <title>Create Folder | CloudShelf</title>
 <link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" href="/css/loader.css"> <!-- Loader CSS -->
+<link rel="stylesheet" href="/css/loader.css">
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen text-gray-800">
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen flex flex-col text-gray-800">
 
 <%- include("../sections/navbar") %>
+
+<main class="flex-grow">
 
 <div class="max-w-5xl mx-auto p-6">
 
@@ -34,18 +36,27 @@ Create Folder
 
 </div>
 
+</main>
+
 <!-- Reusable Loader -->
 <div id="loader" class="loader hidden"></div>
 
 <%- include("../sections/footer") %>
 
-<script src="/js/loader.js"></script> <!-- Loader JS -->
+<script src="/js/loader.js"></script>
+
 <script>
-  // Show loader when creating a folder
-  const createForm = document.getElementById('createFolderForm');
-  createForm.addEventListener('submit', () => {
-      showLoader();
-  });
+document.addEventListener("DOMContentLoaded", () => {
+
+const createForm = document.getElementById('createFolderForm');
+
+if(createForm){
+createForm.addEventListener('submit', () => {
+showLoader();
+});
+}
+
+});
 </script>
 
 </body>

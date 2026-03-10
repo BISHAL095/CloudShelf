@@ -4,103 +4,124 @@
 <meta charset="UTF-8">
 <title>Dashboard | CloudShelf</title>
 <link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" href="/css/loader.css"> <!-- Loader CSS -->
+<link rel="stylesheet" href="/css/loader.css">
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen text-gray-800">
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen flex flex-col text-gray-800">
 
 <%- include("sections/navbar") %>
 
+<main class="flex-grow">
+
 <div class="max-w-5xl mx-auto p-6">
 
-  <h1 class="text-3xl font-bold mb-2">Welcome, <%= user.email %></h1>
-  <p class="mb-6 text-gray-600">Your Dashboard</p>
+<h1 class="text-3xl font-bold mb-2">Welcome, <%= user.email %></h1>
+<p class="mb-6 text-gray-600">Your Dashboard</p>
 
-  <hr class="border-gray-200 mb-8">
+<hr class="border-gray-200 mb-8">
 
-  <!-- Upload File -->
-  <h2 class="text-2xl font-semibold mb-4">Upload File</h2>
+<!-- Upload File -->
+<h2 class="text-2xl font-semibold mb-4">Upload File</h2>
 
-  <form id="uploadForm" action="/files" method="POST" enctype="multipart/form-data"
-        class="bg-white/90 backdrop-blur border border-gray-100 shadow-lg rounded-xl p-6 flex flex-col space-y-4">
+<form id="uploadForm" action="/files" method="POST" enctype="multipart/form-data"
+class="bg-white/90 backdrop-blur border border-gray-100 shadow-lg rounded-xl p-6 flex flex-col space-y-4">
 
-    <input type="file" name="file" id="fileInput" required
-           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+<input type="file" name="file" id="fileInput" required
+class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
 
-    <input type="text" name="customName" id="nameInput" placeholder="Enter file name"
-           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition hidden">
+<input type="text" name="customName" id="nameInput" placeholder="Enter file name"
+class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition hidden">
 
-    <button type="submit"
-            class="bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-semibold py-2 px-4 rounded-lg transition shadow-sm hover:shadow-md">
-      Upload
-    </button>
+<button type="submit"
+class="bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-semibold py-2 px-4 rounded-lg transition shadow-sm hover:shadow-md">
+Upload
+</button>
 
-  </form>
+</form>
 
-  <hr class="border-gray-200 my-8">
+<hr class="border-gray-200 my-8">
 
-  <!-- Folder Section -->
-  <h2 class="text-2xl font-semibold mb-4">Your Folders</h2>
+<!-- Folder Section -->
+<h2 class="text-2xl font-semibold mb-4">Your Folders</h2>
 
-  <a href="/folders/new" class="inline-block mb-5">
-    <button class="bg-green-500 text-white px-5 py-2 rounded-lg hover:bg-green-600 transition shadow-sm hover:shadow-md">
-      Create Folder
-    </button>
-  </a>
+<a href="/folders/new" class="inline-block mb-5">
+<button class="bg-green-500 text-white px-5 py-2 rounded-lg hover:bg-green-600 transition shadow-sm hover:shadow-md">
+Create Folder
+</button>
+</a>
 
-  <% if (!folders || folders.length === 0) { %>
-    <p class="text-gray-600 mb-6">No folders created yet.</p>
-  <% } %>
+<% if (!folders || folders.length === 0) { %>
+<p class="text-gray-600 mb-6">No folders created yet.</p>
+<% } %>
 
-  <% folders.forEach(folder => { %>
-    <div class="flex items-center justify-between bg-white border border-gray-100 p-4 rounded-xl shadow-sm hover:shadow-md transition mb-3">
-      <span class="text-gray-700">📁 <strong><%= folder.name %></strong></span>
-      <a href="/folders/<%= folder.id %>" class="text-blue-600 font-medium hover:underline">Open</a>
-    </div>
-  <% }) %>
+<% folders.forEach(folder => { %>
+<div class="flex items-center justify-between bg-white border border-gray-100 p-4 rounded-xl shadow-sm hover:shadow-md transition mb-3">
+<span class="text-gray-700">📁 <strong><%= folder.name %></strong></span>
+<a href="/folders/<%= folder.id %>" class="text-blue-600 font-medium hover:underline">Open</a>
+</div>
+<% }) %>
 
-  <hr class="border-gray-200 my-8">
+<hr class="border-gray-200 my-8">
 
-  <!-- Files List -->
-  <h2 class="text-2xl font-semibold mb-4">Your Files</h2>
+<!-- Files List -->
+<h2 class="text-2xl font-semibold mb-4">Your Files</h2>
 
-  <% if (!files || files.length === 0) { %>
-    <p class="text-gray-600 mb-6">No files uploaded yet.</p>
-  <% } %>
+<% if (!files || files.length === 0) { %>
+<p class="text-gray-600 mb-6">No files uploaded yet.</p>
+<% } %>
 
-  <% files.forEach(file => { %>
-    <div class="bg-white border border-gray-100 p-4 rounded-xl shadow-sm hover:shadow-md transition mb-4 flex items-center justify-between">
+<% files.forEach(file => { %>
+<div class="bg-white border border-gray-100 p-4 rounded-xl shadow-sm hover:shadow-md transition mb-4 flex items-center justify-between">
 
-      <div>
-        <strong class="text-gray-800">📄 <%= file.name %></strong> 
-        <span class="text-gray-500 text-sm">(<%= (file.size / 1024).toFixed(2) %> KB)</span>
-        <br>
-        <a href="<%= file.url %>" target="_blank" class="text-blue-600 text-sm hover:underline">View</a>
-      </div>
+<div>
+<strong class="text-gray-800">📄 <%= file.name %></strong>
+<span class="text-gray-500 text-sm">(<%= (file.size / 1024).toFixed(2) %> KB)</span>
+<br>
+<a href="<%= file.url %>" target="_blank" class="text-blue-600 text-sm hover:underline">View</a>
+</div>
 
-      <div class="flex items-center space-x-3 text-lg">
-        <button onclick="openRename('<%= file.id %>', '<%= file.name %>')" class="text-gray-500 hover:text-blue-600 transition">✏️</button>
-        <form class="deleteFileForm" action="/files/<%= file.id %>?_method=DELETE" method="POST">
-          <button type="submit" class="text-red-500 hover:text-red-700 transition">🗑️</button>
-        </form>
-      </div>
+<div class="flex items-center space-x-3 text-lg">
+<button onclick="openRename('<%= file.id %>', '<%= file.name %>')" class="text-gray-500 hover:text-blue-600 transition">✏️</button>
 
-    </div>
-  <% }) %>
+<form class="deleteFileForm" action="/files/<%= file.id %>?_method=DELETE" method="POST">
+<button type="submit" class="text-red-500 hover:text-red-700 transition">🗑️</button>
+</form>
 
 </div>
 
+</div>
+<% }) %>
+
+</div>
+
+</main>
+
 <!-- Rename Modal -->
 <div id="renameModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center hidden">
-  <form id="renameForm" method="POST" class="bg-white p-6 rounded-xl shadow-xl w-80 flex flex-col space-y-4 border border-gray-100">
-    <h3 class="text-xl font-semibold text-gray-800">Rename File</h3>
-    <input type="text" id="renameInput" name="name" required class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-    <div class="flex justify-end space-x-2">
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Save</button>
-      <button type="button" onclick="closeRename()" class="bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 transition">Cancel</button>
-    </div>
-  </form>
+<form id="renameForm" method="POST" class="bg-white p-6 rounded-xl shadow-xl w-80 flex flex-col space-y-4 border border-gray-100">
+
+<h3 class="text-xl font-semibold text-gray-800">Rename File</h3>
+
+<input type="text" id="renameInput" name="name" required
+class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+<div class="flex justify-end space-x-2">
+
+<button type="submit"
+class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+Save
+</button>
+
+<button type="button"
+onclick="closeRename()"
+class="bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 transition">
+Cancel
+</button>
+
+</div>
+
+</form>
 </div>
 
 <!-- Loader -->
@@ -111,16 +132,20 @@
 <script src="/js/rename.js"></script>
 <script src="/js/upload.js"></script>
 <script src="/js/loader.js"></script>
-<script>
-  // Show loader on file upload
-  const uploadForm = document.getElementById('uploadForm');
-  uploadForm.addEventListener('submit', () => showLoader());
 
-  // Show loader on file delete
-  const deleteForms = document.querySelectorAll('.deleteFileForm');
-  deleteForms.forEach(form => {
-    form.addEventListener('submit', () => showLoader());
-  });
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+const uploadForm = document.getElementById("uploadForm");
+if (uploadForm) {
+uploadForm.addEventListener("submit", function () {
+showLoader();
+});
+}
+
+attachLoaderToForms(".deleteFileForm");
+
+});
 </script>
 
 </body>

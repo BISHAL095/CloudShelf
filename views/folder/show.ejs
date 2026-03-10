@@ -4,13 +4,15 @@
 <meta charset="UTF-8">
 <title><%= folder.name %> | CloudShelf</title>
 <link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" href="/css/loader.css"> <!-- Loader CSS -->
+<link rel="stylesheet" href="/css/loader.css">
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen text-gray-800">
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen flex flex-col text-gray-800">
 
 <%- include("../sections/navbar") %>
+
+<main class="flex-grow">
 
 <div class="max-w-5xl mx-auto p-6">
 
@@ -89,6 +91,8 @@ View
 
 </div>
 
+</main>
+
 <!-- Reusable Loader -->
 <div id="loader" class="loader hidden"></div>
 
@@ -99,19 +103,23 @@ View
 <script src="/js/loader.js"></script>
 
 <script>
-  // Show loader on file upload
-  const uploadForm = document.getElementById('uploadForm');
-  uploadForm.addEventListener('submit', () => {
-      showLoader();
-  });
+document.addEventListener("DOMContentLoaded", () => {
 
-  // Show loader on file delete
-  const deleteForms = document.querySelectorAll('.deleteFileForm');
-  deleteForms.forEach(form => {
-      form.addEventListener('submit', () => {
-          showLoader();
-      });
-  });
+const uploadForm = document.getElementById('uploadForm');
+if(uploadForm){
+uploadForm.addEventListener('submit', () => {
+showLoader();
+});
+}
+
+const deleteForms = document.querySelectorAll('.deleteFileForm');
+deleteForms.forEach(form => {
+form.addEventListener('submit', () => {
+showLoader();
+});
+});
+
+});
 </script>
 
 </body>
