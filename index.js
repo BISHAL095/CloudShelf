@@ -56,6 +56,10 @@ app.use("/",dashboardRoute);
 app.use("/files", fileRoute);
 app.use("/folders", folderRoute);
 
+app.use((req, res) => {
+  res.status(404).send("Page Not Found");
+});
+
 /* ---------- Server ---------- */
 
 app.listen(PORT, () => {
