@@ -67,7 +67,10 @@ View
 
 <div class="flex items-center space-x-3 text-lg">
 
-<button onclick="openRename('<%= file.id %>', '<%= file.name %>')" class="text-gray-500 hover:text-blue-600">
+<button
+class="renameBtn text-gray-500 hover:text-blue-600 transition"
+data-id="<%= file.id %>"
+data-name="<%= file.name %>">
 ✏️
 </button>
 
@@ -92,6 +95,8 @@ View
 </div>
 
 </main>
+
+<%- include("sections/renameModal") %>
 
 <!-- Reusable Loader -->
 <div id="loader" class="loader hidden"></div>

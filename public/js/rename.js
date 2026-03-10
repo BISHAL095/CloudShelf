@@ -1,23 +1,28 @@
-function openRename(id, name) {
+document.addEventListener("DOMContentLoaded", () => {
 
-  const modal = document.getElementById("renameModal");
-  const input = document.getElementById("renameInput");
-  const form = document.getElementById("renameForm");
+const modal = document.getElementById("renameModal");
+const form = document.getElementById("renameForm");
+const input = document.getElementById("renameInput");
+const cancel = document.getElementById("renameCancel");
 
-  modal.style.display = "block";
+const buttons = document.querySelectorAll(".renameBtn");
 
-  input.value = name;
-  input.focus();
-  input.select();
+buttons.forEach(btn => {
+btn.addEventListener("click", () => {
 
-  form.action = "/files/" + id + "?_method=PUT";
+const id = btn.dataset.id;
+const name = btn.dataset.name;
 
-}
+input.value = name;
+form.action = `/files/${id}?_method=PUT`;
 
-function closeRename() {
+modal.classList.remove("hidden");
 
-  const modal = document.getElementById("renameModal");
+});
+});
 
-  modal.style.display = "none";
+cancel.addEventListener("click", () => {
+modal.classList.add("hidden");
+});
 
-}
+});
